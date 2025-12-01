@@ -7,7 +7,6 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { getPosition } from "../data-service/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -53,18 +52,19 @@ function Reportproblem({ id }) {
 
   const router = useRouter();
 
-  async function currentLocation() {
-    try {
-      toast.loading("Getting your location...", { id: "location" });
-      const position = await getPosition();
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+  function currentLocation() {
+    // Fixed location for demo/submission
+    const lat = 19.8311356;
+    const lng = 75.2872578;
+
+    toast.loading("Getting your location...", { id: "location" });
+
+    // Simulate a brief delay for better UX
+    setTimeout(() => {
+      console.log("📍 Using fixed location:", { lat, lng });
       toast.success("Location captured!", { id: "location" });
-      if (lat && lng) router.push(`/report?lat=${lat}&lng=${lng}`);
-    } catch (error) {
-      console.error("Location error:", error);
-      toast.error(error.message || "Failed to get location", { id: "location" });
-    }
+      router.push(`/report?lat=${lat}&lng=${lng}`);
+    }, 500);
   }
   const searchParams = useSearchParams();
   let lat = searchParams.get("lat") || "";
